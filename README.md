@@ -1,98 +1,308 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🔔 Notification Service API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A production-ready, scalable notification microservice built with **NestJS**, **PostgreSQL**, **Redis**, **BullMQ**, and **Prisma** — containerized with Docker.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Supports multi-channel notifications (Email, SMS, In-App) with reliable async delivery via message queues, JWT-based authentication, and retry logic.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ Features
 
-## Project setup
+- 🔐 **JWT Authentication** — Secure register/login flow with token-based access
+- 📬 **Multi-Channel Delivery** — Email, SMS, and In-App notification support
+- ⚡ **Async Queue Processing** — BullMQ + Redis for reliable background job handling
+- 🔁 **Retry & Failure Handling** — Automatic retry with exponential backoff
+- 🗃️ **Prisma ORM** — Type-safe database access with PostgreSQL
+- 🐳 **Dockerized** — Fully containerized for consistent local and production environments
+- 📄 **Swagger Docs** — Auto-generated API documentation at `/api/docs`
 
-```bash
-$ npm install
-```
+---
 
-## Compile and run the project
+## 🛠️ Tech Stack
 
-```bash
-# development
-$ npm run start
+| Layer | Technology |
+|---|---|
+| Framework | NestJS (TypeScript) |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Queue | BullMQ |
+| Cache / Queue Broker | Redis |
+| Auth | JWT (jsonwebtoken) |
+| Containerization | Docker + Docker Compose |
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
-```
+## 🚀 Getting Started
 
-## Run tests
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v18+
+- [Docker](https://www.docker.com/) & Docker Compose
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+### 1. Clone the Repository
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+git clone https://github.com/your-username/notification-service-api.git
+cd notification-service-api
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2. Set Up Environment Variables
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+cp .env.example .env
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Edit `.env` with your configuration:
 
-## Resources
+```env
+# App
+PORT=3000
+NODE_ENV=development
 
-Check out a few resources that may come in handy when working with NestJS:
+# Database
+DATABASE_URL=postgresql://postgres:password@localhost:5432/notification_db
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
 
-## Support
+# JWT
+JWT_SECRET=your_super_secret_key
+JWT_EXPIRES_IN=7d
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Email (optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your@email.com
+SMTP_PASS=your_app_password
+```
 
-## Stay in touch
+### 3. Start with Docker (Recommended)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+docker-compose up -d
+```
 
-## License
+This starts PostgreSQL, Redis, and the API server.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 4. Run Database Migrations
+
+```bash
+npx prisma migrate dev
+```
+
+### 5. Start the Dev Server (without Docker)
+
+```bash
+npm install
+npm run start:dev
+```
+
+The API will be available at `http://localhost:3000`.
+
+---
+
+## 📚 API Endpoints
+
+### Auth
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/auth/register` | Register a new user |
+| `POST` | `/auth/login` | Login and receive JWT token |
+
+### Notifications
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/notifications/send` | Send a notification (queued) |
+| `GET` | `/notifications` | Get all notifications for the user |
+| `GET` | `/notifications/:id` | Get a specific notification |
+| `PATCH` | `/notifications/:id/read` | Mark notification as read |
+
+> All `/notifications` routes require `Authorization: Bearer <token>` header.
+
+---
+
+## 📦 Request & Response Examples
+
+### Register
+
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+  "name": "Avish Jhalani",
+  "email": "avish@example.com",
+  "password": "securepassword"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "User registered successfully",
+  "userId": "uuid-here"
+}
+```
+
+### Login
+
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "avish@example.com",
+  "password": "securepassword"
+}
+```
+
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOi..."
+}
+```
+
+### Send Notification
+
+```http
+POST /notifications/send
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "userId": "uuid-of-recipient",
+  "type": "EMAIL",
+  "title": "Welcome!",
+  "message": "Thanks for joining our platform.",
+  "metadata": {
+    "priority": "HIGH"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Notification queued successfully",
+  "jobId": "job-id-123"
+}
+```
+
+---
+
+## 🏗️ Project Structure
+
+```
+src/
+├── auth/               # Authentication module (register, login, JWT guard)
+├── notifications/      # Notification module (CRUD, queue producer)
+├── queues/             # BullMQ workers and processors
+├── prisma/             # Prisma service and schema
+├── common/             # Guards, decorators, interceptors, filters
+└── main.ts             # App entry point
+
+prisma/
+└── schema.prisma       # Database schema
+
+docker-compose.yml      # Docker services config
+.env.example            # Environment variable template
+```
+
+---
+
+## 🔄 Queue Architecture
+
+Notifications are dispatched asynchronously using **BullMQ**:
+
+```
+Client Request
+     │
+     ▼
+NestJS Controller
+     │
+     ▼
+BullMQ Producer ──► Redis Queue
+                          │
+                          ▼
+                   BullMQ Worker
+                          │
+                    ┌─────┴──────┐
+                    ▼            ▼
+                 Email        In-App
+                Provider      DB Write
+```
+
+Failed jobs are automatically retried up to **3 times** with exponential backoff before being moved to the dead-letter queue.
+
+---
+
+## 🧪 Running Tests
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Coverage
+npm run test:cov
+```
+
+---
+
+## 📖 Swagger Documentation
+
+Interactive API docs are available at:
+
+```
+http://localhost:3000/api/docs
+```
+
+---
+
+## 🐳 Docker Commands
+
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f app
+
+# Stop all services
+docker-compose down
+
+# Rebuild containers
+docker-compose up -d --build
+```
+
+---
+
+## 🔮 Roadmap
+
+- [ ] WebSocket support for real-time in-app notifications
+- [ ] Push notification channel (FCM)
+- [ ] Notification preferences per user
+- [ ] Rate limiting per user/channel
+- [ ] Admin dashboard for monitoring queues
+- [ ] Publish as npm package
+
+---
+
+## 👤 Author
+
+**Avish Jhalani**
+- LinkedIn: [linkedin.com/in/avishjhalani](https://linkedin.com/in/avishjhalani)
+- GitHub: [@your-username](https://github.com/avishjhalani)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
