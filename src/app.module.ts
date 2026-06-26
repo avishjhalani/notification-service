@@ -14,18 +14,17 @@ import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis'
 @Module({
   imports: [
     ThrottlerModule.forRoot({
-      throttlers:[
-        {
-          name :'notifications',
-          ttl :60000,
-          limit :5,
-        },
-      ],
-      storage :new ThrottlerStorageRedisService({
-        host :process.env.REDIS_HOST,
-        port : Number(process.env.REDIS_PORT),
-      }),
-    }),
+  throttlers: [
+    {
+      name: 'notifications',
+      ttl: 60000,
+      limit: 5,
+    },
+  ],
+  storage: new ThrottlerStorageRedisService(
+    process.env.REDIS_URL || 'redis://localhost:6379'
+  ),
+}),
     AuthModule, NotificationsModule , QueueModule],
   controllers: [AppController],
   providers: [AppService,PrismaService],
