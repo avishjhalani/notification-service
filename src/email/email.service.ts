@@ -6,10 +6,16 @@ export class EmailService {
   private transporter;
 
   constructor() {
+    const port = Number(process.env.MAIL_PORT);
+
+    // Port 465 uses implicit SSL; port 587 uses STARTTLS — both require secure: true.
+    // Any other configured port is also treated as secure to match modern provider requirements.
+    const secure = port === 465 || port === 587 ? true : true;
+
     this.transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
-      port: Number(process.env.MAIL_PORT),
-      secure: false,
+      port,
+      secure,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
@@ -17,6 +23,8 @@ export class EmailService {
       tls: {
         rejectUnauthorized: false,
       },
+      // Fail fast if the SMTP server is unreachable rather than hanging indefinitely.
+      connectionTimeout: 10000,
     });
   }
 
