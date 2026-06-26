@@ -9,9 +9,11 @@ export class EmailService {
   constructor() {
     const port = Number(process.env.MAIL_PORT);
 
-    // Port 465 uses implicit SSL; port 587 uses STARTTLS — both require secure: true.
-    // Any other configured port is also treated as secure to match modern provider requirements.
-    const secure = port === 465 || port === 587 ? true : true;
+    // Port 465 uses implicit SSL (secure: true).
+    // Ports 587 and 2525 use STARTTLS — the connection starts plain and upgrades,
+    // so secure must be false. Nodemailer's tls.rejectUnauthorized: false below
+    // allows the STARTTLS handshake to complete against self-signed/sandbox certs.
+    const secure = port === 465;
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const nodemailerVersion = require('nodemailer/package.json').version as string;
