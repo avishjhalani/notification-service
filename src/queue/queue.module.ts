@@ -7,12 +7,7 @@ import { PrismaService } from '../prisma.service';
 @Module({
   imports: [
     BullModule.forRoot({
-      redis: {
-        host: 'redis.railway.internal',
-        port: 6379,
-        username: 'default',
-        password: 'gLOulkKDzzwtHBIOjQvoOrNPCCLJvUQZ',
-      },
+      url: process.env.REDIS_URL || 'redis://localhost:6379',
     }),
     BullModule.registerQueue({
       name: 'notifications',
