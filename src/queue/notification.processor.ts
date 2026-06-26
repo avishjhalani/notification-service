@@ -1,55 +1,43 @@
-import { Process, Processor, OnQueueActive, OnQueueCompleted, OnQueueFailed } from '@nestjs/bull';
-import type { Job } from 'bull';
+import { Process, Processor } from '@nestjs/bull';
+import type{ Job } from 'bull';
 import { EmailService } from '../email/email.service';
 import { PrismaService } from '../prisma.service';
 
 @Processor('notifications')
-export class NotificationProcessor {
-  constructor(
-    private emailService: EmailService,
-    private prisma: PrismaService,
-  ) {}
+export class NotificationProcessor{
+    constructor(
+        private emailService :EmailService,
+        private prisma :PrismaService,
+    ){}
 
-  @OnQueueActive()
-  onActive(job: Job) {
-    console.log(`Processing job ${job.id} of type ${job.name}`);
-  }
+    @Process('send-email')
 
-  @OnQueueCompleted()
-  onComplete(job: Job) {
-    console.log(`Completed job ${job.id}`);
-  }
+    async handelSendEmail(job:Job){
+        const{notificationId ,to ,subject ,body} =job.data;
 
-  @OnQueueFailed()
-  onFailed(job: Job, err: Error) {
-    console.log(`Failed job ${job.id}: ${err.message}`);
-  }
+        try{
+            await this.emailService.sendEmail(to,subject,body);
 
-  @Process('send-email')
-  async handelSendEmail(job: Job) {
-    console.log(`Worker picked up job ${job.id}`);
-    const { notificationId, to, subject, body } = job.data;
+            await this.prisma.notification.update({
+                where: {id: notificationId},
+                data:{
+                    status :'sent',
+                    attempts :job.attemptsMade+1,
+                },
+            });
 
-    try {
-      await this.emailService.sendEmail(to, subject, body);
-      await this.prisma.notification.update({
-        where: { id: notificationId },
-        data: {
-          status: 'sent',
-          attempts: job.attemptsMade + 1,
-        },
-      });
-      console.log(`✅ Email sent to ${to}`);
-    } catch (error) {
-      await this.prisma.notification.update({
-        where: { id: notificationId },
-        data: {
-          status: 'failed',
-          attempts: job.attemptsMade + 1,
-        },
-      });
-      console.log(`❌ Email failed ${to}: ${error.message}`);
-      throw error;
+            console.log(`Email sent to ${to}`);
+        } catch(error) {
+            await this.prisma.notification.update({
+                where :{id:notificationId},
+                data :{
+                    status :'failed',
+                    attempts :job.attemptsMade+1,
+                },
+            });
+            console.log(`Email failed ${to} :${error.message}`);
+
+            throw error;
+        }
     }
-  }
 }
