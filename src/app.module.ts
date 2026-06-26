@@ -1,6 +1,3 @@
-// This is the registry. Every controller and service you create must be registered here — otherwise NestJS doesn't know it exists.
-
-
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,25 +5,24 @@ import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { QueueModule } from './queue/queue.module';
-import { Throttle, ThrottlerModule } from '@nestjs/throttler';
-import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot({
-  throttlers: [
-    {
-      name: 'notifications',
-      ttl: 60000,
-      limit: 5,
-    },
+      throttlers: [
+        {
+          name: 'notifications',
+          ttl: 60000,
+          limit: 5,
+        },
+      ],
+    }),
+    AuthModule,
+    NotificationsModule,
+    QueueModule,
   ],
-  storage: new ThrottlerStorageRedisService(
-    process.env.REDIS_URL || 'redis://localhost:6379'
-  ),
-}),
-    AuthModule, NotificationsModule , QueueModule],
   controllers: [AppController],
-  providers: [AppService,PrismaService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
